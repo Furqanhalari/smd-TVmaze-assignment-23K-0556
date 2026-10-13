@@ -9,7 +9,9 @@ import '../../../shared/widgets/error_view.dart';
 import '../../../shared/widgets/loading_view.dart';
 import '../../../shared/widgets/poster_image.dart';
 import '../bloc/show_details_bloc.dart';
+import '../widgets/cast_tab.dart';
 import '../widgets/details_header.dart';
+import '../widgets/episodes_tab.dart';
 import '../widgets/overview_tab.dart';
 
 /// Opened from a Home or Search tile with only the show id.
@@ -127,14 +129,8 @@ class _DetailsContent extends StatelessWidget {
           body: TabBarView(
             children: [
               OverviewTab(show: show),
-              const EmptyView(
-                icon: Icons.video_library_outlined,
-                message: 'Episodes will appear here.',
-              ),
-              const EmptyView(
-                icon: Icons.people_outline,
-                message: 'Cast will appear here.',
-              ),
+              EpisodesTab(showId: show.id),
+              CastTab(showId: show.id),
             ],
           ),
         ),
