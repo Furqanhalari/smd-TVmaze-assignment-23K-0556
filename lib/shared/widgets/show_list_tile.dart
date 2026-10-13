@@ -6,7 +6,7 @@ import 'poster_image.dart';
 import 'rating_badge.dart';
 
 /// Row with a small poster, the title, years, genres and rating.
-/// Used for search results (and later the watchlist).
+/// Used for search results and the watchlist.
 class ShowListTile extends StatelessWidget {
   final Show show;
   final VoidCallback? onTap;

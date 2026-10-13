@@ -8,6 +8,7 @@ import '../../../shared/widgets/empty_view.dart';
 import '../../../shared/widgets/error_view.dart';
 import '../../../shared/widgets/loading_view.dart';
 import '../../../shared/widgets/poster_image.dart';
+import '../../watchlist/widgets/watchlist_button.dart';
 import '../bloc/show_details_bloc.dart';
 import '../widgets/cast_tab.dart';
 import '../widgets/details_header.dart';
@@ -76,7 +77,7 @@ class ShowDetailsView extends StatelessWidget {
   }
 }
 
-/// Backdrop image, header, a pinned TabBar and the three tabs.
+/// Backdrop image, header, watchlist button, a pinned TabBar and the tabs.
 class _DetailsContent extends StatelessWidget {
   final Show show;
 
@@ -113,6 +114,7 @@ class _DetailsContent extends StatelessWidget {
               ),
             ),
             SliverToBoxAdapter(child: DetailsHeader(show: show)),
+            SliverToBoxAdapter(child: WatchlistButton(show: show)),
             const SliverPersistentHeader(
               pinned: true,
               delegate: _TabBarDelegate(
