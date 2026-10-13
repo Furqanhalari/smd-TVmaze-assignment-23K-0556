@@ -99,5 +99,31 @@ void main() {
       final repo = repoWith((_) => http.Response('', 500));
       expect(repo.fetchShowDetails(1), throwsA(isA<ApiException>()));
     });
+
+    test('a malformed item is skipped, the rest are kept', () async {
+      final repo = repoWith((_) => http.Response(
+          jsonEncode([
+            {'id': 1, 'name': 'Good'},
+            {'name': 'No id'},
+            'not a map',
+          ]),
+          200));
+      final shows = await repo.fetchShows(0);
+      expect(shows.map((s) => s.name), ['Good']);
+    });
+
+    test('an unexpected response shape throws ApiException', () async {
+      final repo = repoWith((_) => http.Response('{"oops": true}', 200));
+      expect(repo.fetchCast(1), throwsA(isA<ApiException>()));
+    });
+
+    test('a dropped connection throws NetworkException', () async {
+      final repo = ShowRepository(
+        apiClient: ApiClient(
+          client: MockClient((_) async => throw http.ClientException('down')),
+        ),
+      );
+      expect(repo.searchShows('x'), throwsA(isA<NetworkException>()));
+    });
   });
 }

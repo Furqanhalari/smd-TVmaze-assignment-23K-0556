@@ -27,9 +27,7 @@ class CastBloc extends Bloc<CastEvent, CastState> {
     } catch (e) {
       emit(CastState(
         status: CastStatus.failure,
-        errorMessage: e is ApiException
-            ? e.message
-            : 'Something went wrong. Please try again.',
+        errorMessage: friendlyMessage(e),
       ));
     }
   }

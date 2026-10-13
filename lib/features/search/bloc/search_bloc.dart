@@ -50,12 +50,8 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
       emit(SearchState(
         status: SearchStatus.failure,
         query: query,
-        errorMessage: _message(e),
+        errorMessage: friendlyMessage(e),
       ));
     }
   }
-
-  static String _message(Object error) => error is ApiException
-      ? error.message
-      : 'Something went wrong. Please try again.';
 }

@@ -27,12 +27,8 @@ class ShowDetailsBloc extends Bloc<ShowDetailsEvent, ShowDetailsState> {
     } catch (e) {
       emit(ShowDetailsState(
         status: ShowDetailsStatus.failure,
-        errorMessage: _message(e),
+        errorMessage: friendlyMessage(e),
       ));
     }
   }
-
-  static String _message(Object error) => error is ApiException
-      ? error.message
-      : 'Something went wrong. Please try again.';
 }

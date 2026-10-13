@@ -57,7 +57,7 @@ class ShowsBloc extends Bloc<ShowsEvent, ShowsState> {
         ));
       }
     } catch (e) {
-      emit(state.copyWith(isLoadingMore: false, loadMoreError: _message(e)));
+      emit(state.copyWith(isLoadingMore: false, loadMoreError: friendlyMessage(e)));
     }
   }
 
@@ -78,7 +78,7 @@ class ShowsBloc extends Bloc<ShowsEvent, ShowsState> {
     } catch (e) {
       emit(state.copyWith(
         status: ShowsStatus.failure,
-        errorMessage: _message(e),
+        errorMessage: friendlyMessage(e),
       ));
     }
   }
@@ -89,8 +89,4 @@ class ShowsBloc extends Bloc<ShowsEvent, ShowsState> {
       ..sort((a, b) => b.rating!.compareTo(a.rating!));
     return rated.take(featuredCount).toList();
   }
-
-  static String _message(Object error) => error is ApiException
-      ? error.message
-      : 'Something went wrong. Please try again.';
 }

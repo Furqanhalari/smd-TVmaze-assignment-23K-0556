@@ -16,8 +16,8 @@ class ShowRepository {
   /// Returns an empty list after the last page (the API answers 404).
   Future<List<Show>> fetchShows(int page) async {
     try {
-      final data = await _apiClient.get(ApiConstants.shows(page)) as List;
-      return data.map((e) => Show.fromJson(e as Map<String, dynamic>)).toList();
+      final data = await _apiClient.get(ApiConstants.shows(page));
+      return _parseList(data, Show.fromJson);
     } on NotFoundException {
       return [];
     }
@@ -25,29 +25,47 @@ class ShowRepository {
 
   /// Search results come back as `[{score, show: {...}}]`.
   Future<List<Show>> searchShows(String query) async {
-    final data = await _apiClient.get(ApiConstants.search(query)) as List;
-    return data.map((e) {
-      final item = e as Map<String, dynamic>;
-      return Show.fromJson(item['show'] as Map<String, dynamic>);
-    }).toList();
+    final data = await _apiClient.get(ApiConstants.search(query));
+    return _parseList(
+      data,
+      (item) => Show.fromJson(item['show'] as Map<String, dynamic>),
+    );
   }
 
   Future<Show> fetchShowDetails(int id) async {
     final data = await _apiClient.get(ApiConstants.showDetails(id));
-    return Show.fromJson(data as Map<String, dynamic>);
+    try {
+      return Show.fromJson(data as Map<String, dynamic>);
+    } catch (_) {
+      throw const ApiException('Invalid response from server.');
+    }
   }
 
   Future<List<CastMember>> fetchCast(int showId) async {
-    final data = await _apiClient.get(ApiConstants.cast(showId)) as List;
-    return data
-        .map((e) => CastMember.fromJson(e as Map<String, dynamic>))
-        .toList();
+    final data = await _apiClient.get(ApiConstants.cast(showId));
+    return _parseList(data, CastMember.fromJson);
   }
 
   Future<List<Episode>> fetchEpisodes(int showId) async {
-    final data = await _apiClient.get(ApiConstants.episodes(showId)) as List;
-    return data
-        .map((e) => Episode.fromJson(e as Map<String, dynamic>))
-        .toList();
+    final data = await _apiClient.get(ApiConstants.episodes(showId));
+    return _parseList(data, Episode.fromJson);
+  }
+
+  /// Parses a JSON list item by item. A malformed item (e.g. missing id)
+  /// is skipped, so one bad entry can't break the whole screen.
+  static List<T> _parseList<T>(
+      dynamic data, T Function(Map<String, dynamic>) fromJson) {
+    if (data is! List) {
+      throw const ApiException('Invalid response from server.');
+    }
+    final items = <T>[];
+    for (final item in data) {
+      try {
+        items.add(fromJson(item as Map<String, dynamic>));
+      } catch (_) {
+        // Skip this item and keep the rest.
+      }
+    }
+    return items;
   }
 }

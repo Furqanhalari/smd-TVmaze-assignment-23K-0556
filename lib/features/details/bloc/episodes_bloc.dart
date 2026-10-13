@@ -36,9 +36,7 @@ class EpisodesBloc extends Bloc<EpisodesEvent, EpisodesState> {
     } catch (e) {
       emit(EpisodesState(
         status: EpisodesStatus.failure,
-        errorMessage: e is ApiException
-            ? e.message
-            : 'Something went wrong. Please try again.',
+        errorMessage: friendlyMessage(e),
       ));
     }
   }

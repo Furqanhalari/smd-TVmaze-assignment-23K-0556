@@ -25,6 +25,9 @@ class ApiClient {
     } on http.ClientException {
       throw const NetworkException(
           'No internet connection. Check your network and retry.');
+    } on Exception {
+      // Any other low-level failure (e.g. a TLS handshake error).
+      throw const NetworkException('Could not reach the server.');
     }
 
     if (response.statusCode == 404) throw const NotFoundException();

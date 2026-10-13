@@ -19,3 +19,9 @@ class NetworkException extends ApiException {
 class NotFoundException extends ApiException {
   const NotFoundException() : super('Not found', statusCode: 404);
 }
+
+/// Turns any caught error into a message the UI can show.
+/// Known [ApiException]s keep their message; anything else is generic.
+String friendlyMessage(Object error) => error is ApiException
+    ? error.message
+    : 'Something went wrong. Please try again.';
