@@ -6,6 +6,7 @@ import '../../../shared/widgets/empty_view.dart';
 import '../../../shared/widgets/error_view.dart';
 import '../../../shared/widgets/loading_view.dart';
 import '../../../shared/widgets/show_list_tile.dart';
+import '../../details/view/show_details_screen.dart';
 import '../bloc/search_bloc.dart';
 import '../widgets/search_bar_field.dart';
 
@@ -88,8 +89,14 @@ class _SearchViewState extends State<SearchView> {
                       keyboardDismissBehavior:
                           ScrollViewKeyboardDismissBehavior.onDrag,
                       itemCount: state.results.length,
-                      itemBuilder: (context, index) =>
-                          ShowListTile(show: state.results[index]),
+                      itemBuilder: (context, index) {
+                        final show = state.results[index];
+                        return ShowListTile(
+                          show: show,
+                          onTap: () => Navigator.of(context)
+                              .push(ShowDetailsScreen.route(show.id)),
+                        );
+                      },
                     );
                 }
               },

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../data/repositories/show_repository.dart';
 import '../../../shared/widgets/empty_view.dart';
+import '../../details/view/show_details_screen.dart';
 import '../../../shared/widgets/error_view.dart';
 import '../../../shared/widgets/loading_view.dart';
 import '../../../shared/widgets/show_poster_card.dart';
@@ -129,7 +130,14 @@ class _HomeViewState extends State<HomeView> {
               childAspectRatio: 0.55,
             ),
             delegate: SliverChildBuilderDelegate(
-              (context, index) => ShowPosterCard(show: state.shows[index]),
+              (context, index) {
+                final show = state.shows[index];
+                return ShowPosterCard(
+                  show: show,
+                  onTap: () => Navigator.of(context)
+                      .push(ShowDetailsScreen.route(show.id)),
+                );
+              },
               childCount: state.shows.length,
             ),
           ),

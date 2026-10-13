@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../data/models/show.dart';
 import '../../../shared/widgets/show_poster_card.dart';
+import '../../details/view/show_details_screen.dart';
 
 /// Horizontal "Top Rated" list shown above the grid.
 class FeaturedRow extends StatelessWidget {
@@ -18,9 +19,13 @@ class FeaturedRow extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 16),
         itemCount: shows.length,
         separatorBuilder: (_, __) => const SizedBox(width: 12),
-        itemBuilder: (_, index) => SizedBox(
+        itemBuilder: (context, index) => SizedBox(
           width: 130,
-          child: ShowPosterCard(show: shows[index]),
+          child: ShowPosterCard(
+            show: shows[index],
+            onTap: () => Navigator.of(context)
+                .push(ShowDetailsScreen.route(shows[index].id)),
+          ),
         ),
       ),
     );
